@@ -10,6 +10,11 @@ function chooseFilesByExtension(extensions, count = 1) {
   });
 }
 
+function isUserCancel(error) {
+  const message = (error && (error.errMsg || error.message)) || String(error || "");
+  return /\bcancel\b/i.test(message);
+}
+
 function choosePdfFiles(count = 1) {
   return chooseFilesByExtension(["pdf"], count);
 }
@@ -83,5 +88,6 @@ module.exports = {
   saveFile,
   openDocument,
   saveImageToAlbum,
-  copyText
+  copyText,
+  isUserCancel
 };

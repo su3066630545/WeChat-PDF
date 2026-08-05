@@ -1,5 +1,27 @@
 const MAX_LOCAL_FILE_SIZE = 20 * 1024 * 1024;
-const LOCAL_SUPPORTED_TOOLS = [];
+const LOCAL_SUPPORTED_TOOLS = [
+  "compress",
+  "merge",
+  "split",
+  "convert-image",
+  "image-to-pdf",
+  "watermark",
+  "rotate",
+  "delete-pages",
+  "word-to-pdf",
+  "excel-to-pdf",
+  "ppt-to-pdf",
+  "txt-to-pdf",
+  "cad-to-pdf",
+  "web-to-pdf",
+  "pdf-to-word",
+  "pdf-to-excel",
+  "pdf-to-ppt",
+  "pdf-to-text",
+  "pdf-to-html",
+  "pdf-to-epub",
+  "extract-images"
+];
 const CHUNK_SIZE = 2 * 1024 * 1024;
 
 const TOOL_CONFIG = {

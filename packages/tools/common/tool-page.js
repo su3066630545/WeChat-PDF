@@ -4,7 +4,8 @@ const {
   chooseImages,
   openDocument,
   saveImageToAlbum,
-  copyText
+  copyText,
+  isUserCancel
 } = require("../../../utils/file");
 const { validateFiles, getExtension } = require("../../../utils/validator");
 const { runPdfTask } = require("../../../utils/pdf-core");
@@ -80,6 +81,10 @@ function createToolPage(type, defaults = {}) {
         this.setData({ files, activeStep: "process" });
         monitor.track("files_selected", { type, count: files.length, totalSize: sumFileSize(files) });
       } catch (error) {
+        if (isUserCancel(error)) {
+          this.setData({ activeStep: "choose", error: "", loading: false, showSkeleton: false });
+          return;
+        }
         monitor.trackError(error, { type, action: "chooseFiles" });
         this.showError(error);
       }
