@@ -7,8 +7,13 @@ import express from "express";
 export function uploadRouter(dataDir) {
   const router = express.Router();
   const chunkDir = path.join(dataDir, "chunks");
-  fsSync.mkdirSync(chunkDir, { recursive: true });
-  const upload = multer({ dest: chunkDir });
+  const storage = multer.diskStorage({
+    destination(req, file, callback) {
+      fsSync.mkdirSync(chunkDir, { recursive: true });
+      callback(null, chunkDir);
+    }
+  });
+  const upload = multer({ storage });
 
   router.post("/chunk", upload.single("chunk"), async (req, res) => {
     const { uploadId, index } = req.body;
