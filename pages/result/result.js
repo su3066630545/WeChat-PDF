@@ -1,4 +1,5 @@
 const { openDocument, saveImageToAlbum, copyText } = require("../../utils/file");
+const cache = require("../../utils/cache");
 
 Page({
   data: {
@@ -8,7 +9,7 @@ Page({
 
   onLoad() {
     this.setData({
-      result: wx.getStorageSync("latestPdfResult")
+      result: cache.getLatestResult()
     });
   },
 

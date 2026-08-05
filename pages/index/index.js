@@ -1,3 +1,5 @@
+const cache = require("../../utils/cache");
+
 const primaryTools = [
   { key: "compress", name: "PDF 压缩", desc: "减小文件体积", path: "/packages/tools/compress/index" },
   { key: "merge", name: "PDF 合并", desc: "多个文件合成一个", path: "/packages/tools/merge/index" },
@@ -21,7 +23,7 @@ Page({
 
   onShow() {
     this.setData({
-      hasLatestResult: Boolean(wx.getStorageSync("latestPdfResult"))
+      hasLatestResult: Boolean(cache.getLatestResult())
     });
   },
 
@@ -38,7 +40,7 @@ Page({
   },
 
   openLatestResult() {
-    const route = wx.getStorageSync("lastPdfToolRoute");
+    const route = cache.getLastToolRoute();
     wx.navigateTo({
       url: route || "/pages/result/result"
     });

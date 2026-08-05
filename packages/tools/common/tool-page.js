@@ -10,6 +10,7 @@ const { validateFiles } = require("../../../utils/validator");
 const { runPdfTask } = require("../../../utils/pdf-core");
 const queue = require("../../../utils/task-queue");
 const monitor = require("../../../utils/monitor");
+const cache = require("../../../utils/cache");
 
 const steps = [
   { key: "choose", name: "选择文件" },
@@ -53,12 +54,11 @@ function createToolPage(type, defaults = {}) {
     },
 
     rememberToolRoute() {
-      wx.setStorageSync("lastPdfToolRoute", `/${this.route}`);
-      wx.setStorageSync("lastPdfToolType", type);
+      cache.rememberTool(`/${this.route}`, type);
     },
 
     restoreLatestResult() {
-      const latest = wx.getStorageSync("latestPdfResult");
+      const latest = cache.getLatestResult();
       if (!latest || latest.type !== type || this.data.loading || this.data.result) return;
 
       this.setData({
@@ -118,7 +118,7 @@ function createToolPage(type, defaults = {}) {
             activeStep: "preview",
             error: ""
           });
-          wx.setStorageSync("latestPdfResult", duplicated.result);
+          cache.setLatestResult(duplicated.result);
           monitor.track("task_deduped", { type, status: "done" });
           return;
         }
@@ -132,7 +132,7 @@ function createToolPage(type, defaults = {}) {
           lastTaskInput: { files, options }
         });
         this.startSkeletonTimer();
-        wx.setStorageSync("pdfTaskRunning", true);
+        cache.setTaskRunning(true);
         task = queue.addTask({ type, title: config.title, files, options, fingerprint });
         monitor.track("task_started", { type, fileCount: files.length, totalSize: sumFileSize(files) });
 
@@ -156,15 +156,15 @@ function createToolPage(type, defaults = {}) {
         });
         this.clearSkeletonTimer();
         queue.updateTask(task.id, { status: "done", progress: 100, result: nextResult });
-        wx.setStorageSync("latestPdfResult", nextResult);
-        wx.setStorageSync("pdfTaskRunning", false);
+        cache.setLatestResult(nextResult);
+        cache.setTaskRunning(false);
         this.releaseInputFiles();
         monitor.track("task_done", { type, progress: 100 });
         wx.showToast({ title: "处理完成", icon: "success" });
       } catch (error) {
         this.clearSkeletonTimer();
         this.setData({ loading: false, showSkeleton: false });
-        wx.setStorageSync("pdfTaskRunning", false);
+        cache.setTaskRunning(false);
         if (task) queue.updateTask(task.id, { status: "failed", error: getErrorMessage(error) });
         monitor.trackError(error, { type, action: "runTask" });
         this.showError(error);

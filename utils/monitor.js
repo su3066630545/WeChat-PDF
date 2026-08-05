@@ -1,4 +1,5 @@
 const MAX_LOCAL_LOGS = 20;
+const cache = require("./cache");
 
 function track(event, payload = {}) {
   const app = getApp();
@@ -40,11 +41,7 @@ function sanitize(payload) {
 }
 
 function persistLocal(log) {
-  try {
-    const logs = wx.getStorageSync("pdfToolLogs") || [];
-    logs.unshift(log);
-    wx.setStorageSync("pdfToolLogs", logs.slice(0, MAX_LOCAL_LOGS));
-  } catch (error) {}
+  cache.pushLog(log, MAX_LOCAL_LOGS);
 }
 
 function getCurrentRoute() {
