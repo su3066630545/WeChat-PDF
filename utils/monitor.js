@@ -1,5 +1,6 @@
 const MAX_LOCAL_LOGS = 20;
 const cache = require("./cache");
+const { sendLog } = require("./api");
 
 function track(event, payload = {}) {
   const app = getApp();
@@ -14,12 +15,7 @@ function track(event, payload = {}) {
 
   if (!app.globalData || !app.globalData.enableLogUpload) return;
 
-  wx.request({
-    url: `${app.globalData.apiBaseUrl}/api/logs`,
-    method: "POST",
-    data: log,
-    fail: () => {}
-  });
+  sendLog(log).catch(() => {});
 }
 
 function trackError(error, context = {}) {

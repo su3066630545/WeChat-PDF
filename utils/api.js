@@ -1,10 +1,17 @@
 const { CHUNK_SIZE } = require("./constants");
 
+const MAX_RETRY = 2;
+const RETRY_DELAY_MS = 450;
+
 function getApiBaseUrl() {
   return getApp().globalData.apiBaseUrl;
 }
 
-function request(path, data, method = "POST") {
+async function request(path, data, method = "POST") {
+  return withRetry(() => requestOnce(path, data, method), "服务请求失败");
+}
+
+function requestOnce(path, data, method = "POST") {
   return new Promise((resolve, reject) => {
     wx.request({
       url: `${getApiBaseUrl()}${path}`,
@@ -29,7 +36,7 @@ async function uploadInChunks(file, onProgress) {
   for (let index = 0; index < totalChunks; index += 1) {
     const chunkPath = await writeChunkFile(file, uploadId, index);
     try {
-      await uploadChunk(chunkPath, file, uploadId, index, totalChunks);
+      await withRetry(() => uploadChunk(chunkPath, file, uploadId, index, totalChunks), "分片上传失败");
     } finally {
       removeTempFile(chunkPath);
     }
@@ -125,7 +132,15 @@ async function runRemoteTool(type, uploadedFiles, options) {
   return response;
 }
 
+function sendLog(log) {
+  return requestOnce("/api/logs", log);
+}
+
 function downloadResult(url) {
+  return withRetry(() => downloadResultOnce(url), "结果文件下载失败");
+}
+
+function downloadResultOnce(url) {
   return new Promise((resolve, reject) => {
     wx.downloadFile({
       url: `${getApiBaseUrl()}${url}`,
@@ -138,7 +153,42 @@ function downloadResult(url) {
   });
 }
 
+async function withRetry(task, fallbackMessage) {
+  let lastError;
+
+  for (let attempt = 0; attempt <= MAX_RETRY; attempt += 1) {
+    try {
+      return await task();
+    } catch (error) {
+      lastError = error;
+      if (attempt >= MAX_RETRY) break;
+      showWeakNetworkHint(attempt);
+      await delay(RETRY_DELAY_MS * (attempt + 1));
+    }
+  }
+
+  throw normalizeError(lastError, fallbackMessage);
+}
+
+function showWeakNetworkHint(attempt) {
+  if (attempt > 0) return;
+  wx.showToast({
+    title: "网络较慢，正在重试",
+    icon: "none"
+  });
+}
+
+function delay(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function normalizeError(error, fallbackMessage) {
+  const message = (error && (error.message || error.errMsg)) || fallbackMessage;
+  return new Error(message);
+}
+
 module.exports = {
   uploadInChunks,
-  runRemoteTool
+  runRemoteTool,
+  sendLog
 };
