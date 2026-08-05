@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "任务队列"
+  "navigationBarTitleText": "任务队列",
+  "navigationBarBackgroundColor": "#111827",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false
 }

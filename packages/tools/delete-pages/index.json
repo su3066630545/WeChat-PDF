@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "页面删除"
+  "navigationBarTitleText": "页面删除",
+  "navigationBarBackgroundColor": "#111827",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false
 }

@@ -67,6 +67,11 @@ Page({
   showError(error) {
     const message = typeof error === "string" ? error : (error && (error.message || error.errMsg)) || "操作失败";
     this.setData({ error: message });
-    wx.showToast({ title: message, icon: "none" });
+    wx.showModal({
+      title: "处理失败",
+      content: message,
+      showCancel: false,
+      confirmText: "知道了"
+    });
   }
 });

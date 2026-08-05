@@ -1,16 +1,18 @@
 .page {
   min-height: 100vh;
-  padding: 36rpx 28rpx 56rpx;
+  padding: 32rpx 28rpx 56rpx;
+  background: #f4f6f8;
 }
 
 .header {
-  padding-bottom: 24rpx;
+  padding: 8rpx 0 24rpx;
 }
 
 .title {
   display: block;
   font-size: 42rpx;
   font-weight: 800;
+  line-height: 1.25;
 }
 
 .subtitle {
@@ -19,6 +21,28 @@
   color: #69717d;
   font-size: 26rpx;
   line-height: 1.55;
+}
+
+.pipeline {
+  display: flex;
+  gap: 8rpx;
+  margin: 8rpx 0 24rpx;
+}
+
+.step {
+  flex: 1;
+  height: 48rpx;
+  border-radius: 8rpx;
+  background: #e8ecf2;
+  color: #69717d;
+  font-size: 20rpx;
+  line-height: 48rpx;
+  text-align: center;
+}
+
+.step-active {
+  background: #111827;
+  color: #ffffff;
 }
 
 .pick,
@@ -39,24 +63,36 @@
   color: #ffffff;
 }
 
-.files {
-  margin-top: 24rpx;
-}
-
-.file {
-  margin-bottom: 14rpx;
+.files,
+.option,
+.result {
+  margin-top: 22rpx;
   padding: 22rpx;
   border: 1rpx solid #e3e6eb;
   border-radius: 8rpx;
   background: #ffffff;
 }
 
+.file {
+  margin-bottom: 14rpx;
+  padding-bottom: 14rpx;
+  border-bottom: 1rpx solid #edf0f4;
+}
+
+.file:last-child {
+  margin-bottom: 0;
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
 .file-name,
 .file-size,
 .result-title,
 .result-message,
+.result-path,
 .error,
-.progress-text {
+.progress-text,
+.option text {
   display: block;
 }
 
@@ -72,6 +108,19 @@
   font-size: 24rpx;
 }
 
+.option text {
+  margin-bottom: 10rpx;
+  font-size: 26rpx;
+  font-weight: 700;
+}
+
+.option input {
+  height: 72rpx;
+  padding: 0 18rpx;
+  border: 1rpx solid #e3e6eb;
+  border-radius: 8rpx;
+}
+
 .progress {
   margin-top: 24rpx;
 }
@@ -85,7 +134,7 @@
 
 .bar-inner {
   height: 100%;
-  background: #2b5aed;
+  background: #111827;
 }
 
 .progress-text {
@@ -94,30 +143,16 @@
   font-size: 24rpx;
 }
 
-.result {
-  margin-top: 28rpx;
-  padding: 24rpx;
-  border-radius: 8rpx;
-  background: #ffffff;
-}
-
 .result-title {
   font-size: 30rpx;
   font-weight: 700;
 }
 
-.result-message {
+.result-message,
+.result-path {
   margin-top: 10rpx;
   color: #69717d;
   font-size: 26rpx;
-  line-height: 1.5;
-}
-
-.result-path {
-  display: block;
-  margin-top: 14rpx;
-  color: #1f2329;
-  font-size: 24rpx;
   line-height: 1.5;
   word-break: break-all;
 }
@@ -130,7 +165,7 @@
 }
 
 .export {
-  background: #1f2329;
+  background: #111827;
   color: #ffffff;
 }
 

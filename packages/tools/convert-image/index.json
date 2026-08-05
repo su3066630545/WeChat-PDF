@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "PDF 转图片"
+  "navigationBarTitleText": "PDF 转图片",
+  "navigationBarBackgroundColor": "#111827",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false
 }

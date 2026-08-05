@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "PDF 拆分"
+  "navigationBarTitleText": "PDF 拆分",
+  "navigationBarBackgroundColor": "#111827",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false
 }

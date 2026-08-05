@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "添加水印"
+  "navigationBarTitleText": "添加水印",
+  "navigationBarBackgroundColor": "#111827",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false
 }

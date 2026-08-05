@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "PDF 旋转"
+  "navigationBarTitleText": "PDF 旋转",
+  "navigationBarBackgroundColor": "#111827",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false
 }

@@ -1,3 +1,6 @@
 {
-  "navigationBarTitleText": "PDF 压缩"
+  "navigationBarTitleText": "PDF 压缩",
+  "navigationBarBackgroundColor": "#111827",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false
 }

@@ -10,6 +10,14 @@ const { validateFiles } = require("../../../utils/validator");
 const { runPdfTask } = require("../../../utils/pdf-core");
 const queue = require("../../../utils/task-queue");
 
+const steps = [
+  { key: "choose", name: "选择文件" },
+  { key: "parse", name: "解析校验" },
+  { key: "process", name: "处理文件" },
+  { key: "preview", name: "预览结果" },
+  { key: "save", name: "保存导出" }
+];
+
 function createToolPage(type, defaults = {}) {
   const config = TOOL_CONFIG[type];
 
@@ -19,21 +27,25 @@ function createToolPage(type, defaults = {}) {
       title: config.title,
       files: [],
       options: { ...defaults },
+      steps,
+      activeStep: "choose",
       loading: false,
       progress: 0,
       result: null,
-      savedPath: "",
-      error: ""
+      error: "",
+      lastTaskInput: null
     },
 
     async chooseFiles() {
       try {
+        this.setData({ activeStep: "choose", error: "", result: null, progress: 0 });
         const files = config.accept.includes("image")
           ? await chooseImages(config.maxFiles)
           : await choosePdfFiles(config.maxFiles);
 
+        this.setData({ activeStep: "parse" });
         await validateFiles(files, config);
-        this.setData({ files, error: "", result: null, savedPath: "", progress: 0 });
+        this.setData({ files, activeStep: "process" });
       } catch (error) {
         this.showError(error);
       }
@@ -51,8 +63,16 @@ function createToolPage(type, defaults = {}) {
       let task;
 
       try {
+        this.setData({ activeStep: "parse" });
         await validateFiles(files, config);
-        this.setData({ loading: true, progress: 0, error: "", result: null, savedPath: "" });
+        this.setData({
+          loading: true,
+          activeStep: "process",
+          progress: 0,
+          error: "",
+          result: null,
+          lastTaskInput: { files, options }
+        });
         task = queue.addTask({ type, title: config.title, files });
 
         const result = await runPdfTask(type, files, options, (progress) => {
@@ -65,7 +85,12 @@ function createToolPage(type, defaults = {}) {
           name: getResultName(result)
         };
 
-        this.setData({ result: nextResult, loading: false, progress: 100 });
+        this.setData({
+          result: nextResult,
+          loading: false,
+          progress: 100,
+          activeStep: "preview"
+        });
         queue.updateTask(task.id, { status: "done", progress: 100, result: nextResult });
         wx.setStorageSync("latestPdfResult", nextResult);
         wx.navigateTo({ url: "/pages/result/result" });
@@ -76,14 +101,23 @@ function createToolPage(type, defaults = {}) {
       }
     },
 
+    retryTask() {
+      if (!this.data.files.length) {
+        this.showError("请先选择文件");
+        return;
+      }
+      this.runTask();
+    },
+
     async openResult() {
       const { result } = this.data;
       if (!result || !result.filePath) {
-        wx.showToast({ title: "暂无结果文件", icon: "none" });
+        this.showError("暂无结果文件");
         return;
       }
 
       try {
+        this.setData({ activeStep: "preview" });
         await openDocument(result.filePath);
       } catch (error) {
         this.showError(error);
@@ -93,11 +127,12 @@ function createToolPage(type, defaults = {}) {
     async saveResult() {
       const { result } = this.data;
       if (!result || !result.filePath) {
-        wx.showToast({ title: "暂无结果文件", icon: "none" });
+        this.showError("暂无结果文件");
         return;
       }
 
       try {
+        this.setData({ activeStep: "save" });
         if (result.kind === "image") {
           const images = result.files && result.files.length ? result.files : [{ filePath: result.filePath }];
           for (const image of images) {
@@ -117,13 +152,12 @@ function createToolPage(type, defaults = {}) {
     async copyResultUrl() {
       const { result } = this.data;
       if (!result || !result.url) {
-        wx.showToast({ title: "暂无下载链接", icon: "none" });
+        this.showError("暂无下载链接");
         return;
       }
 
       try {
-        const baseUrl = getApp().globalData.apiBaseUrl;
-        await copyText(`${baseUrl}${result.url}`);
+        await copyText(`${getApp().globalData.apiBaseUrl}${result.url}`);
       } catch (error) {
         this.showError(error);
       }
@@ -136,7 +170,15 @@ function createToolPage(type, defaults = {}) {
     showError(error) {
       const message = getErrorMessage(error);
       this.setData({ error: message });
-      wx.showToast({ title: message, icon: "none" });
+      wx.showModal({
+        title: "处理失败",
+        content: message,
+        confirmText: "重试",
+        cancelText: "关闭",
+        success: (res) => {
+          if (res.confirm) this.retryTask();
+        }
+      });
     }
   });
 }
