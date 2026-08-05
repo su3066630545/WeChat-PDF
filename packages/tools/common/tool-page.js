@@ -36,6 +36,33 @@ function createToolPage(type, defaults = {}) {
       lastTaskInput: null
     },
 
+    onLoad() {
+      this.rememberToolRoute();
+      this.restoreLatestResult();
+    },
+
+    onShow() {
+      this.rememberToolRoute();
+      this.restoreLatestResult();
+    },
+
+    rememberToolRoute() {
+      wx.setStorageSync("lastPdfToolRoute", `/${this.route}`);
+      wx.setStorageSync("lastPdfToolType", type);
+    },
+
+    restoreLatestResult() {
+      const latest = wx.getStorageSync("latestPdfResult");
+      if (!latest || latest.type !== type || this.data.loading || this.data.result) return;
+
+      this.setData({
+        result: latest,
+        progress: 100,
+        activeStep: "preview",
+        error: ""
+      });
+    },
+
     async chooseFiles() {
       try {
         this.setData({ activeStep: "choose", error: "", result: null, progress: 0 });
@@ -63,6 +90,7 @@ function createToolPage(type, defaults = {}) {
       let task;
 
       try {
+        this.rememberToolRoute();
         this.setData({ activeStep: "parse" });
         await validateFiles(files, config);
         this.setData({
@@ -73,6 +101,7 @@ function createToolPage(type, defaults = {}) {
           result: null,
           lastTaskInput: { files, options }
         });
+        wx.setStorageSync("pdfTaskRunning", true);
         task = queue.addTask({ type, title: config.title, files });
 
         const result = await runPdfTask(type, files, options, (progress) => {
@@ -82,6 +111,7 @@ function createToolPage(type, defaults = {}) {
 
         const nextResult = {
           ...result,
+          type,
           name: getResultName(result)
         };
 
@@ -93,9 +123,11 @@ function createToolPage(type, defaults = {}) {
         });
         queue.updateTask(task.id, { status: "done", progress: 100, result: nextResult });
         wx.setStorageSync("latestPdfResult", nextResult);
-        wx.navigateTo({ url: "/pages/result/result" });
+        wx.setStorageSync("pdfTaskRunning", false);
+        wx.showToast({ title: "处理完成", icon: "success" });
       } catch (error) {
         this.setData({ loading: false });
+        wx.setStorageSync("pdfTaskRunning", false);
         if (task) queue.updateTask(task.id, { status: "failed", error: getErrorMessage(error) });
         this.showError(error);
       }

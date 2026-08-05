@@ -38,8 +38,9 @@ Page({
   },
 
   openLatestResult() {
+    const route = wx.getStorageSync("lastPdfToolRoute");
     wx.navigateTo({
-      url: "/pages/result/result"
+      url: route || "/pages/result/result"
     });
   }
 });

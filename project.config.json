@@ -1,7 +1,20 @@
 {
   "description": "WeChat Mini Program project",
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      {
+        "type": "folder",
+        "value": "server/data"
+      },
+      {
+        "type": "folder",
+        "value": "server/data-e2e"
+      },
+      {
+        "type": "folder",
+        "value": "server/data-debug"
+      }
+    ],
     "include": []
   },
   "setting": {
