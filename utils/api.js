@@ -28,7 +28,11 @@ async function uploadInChunks(file, onProgress) {
 
   for (let index = 0; index < totalChunks; index += 1) {
     const chunkPath = await writeChunkFile(file, uploadId, index);
-    await uploadChunk(chunkPath, file, uploadId, index, totalChunks);
+    try {
+      await uploadChunk(chunkPath, file, uploadId, index, totalChunks);
+    } finally {
+      removeTempFile(chunkPath);
+    }
     onProgress(Math.round(((index + 1) / totalChunks) * 60));
   }
 
@@ -37,6 +41,12 @@ async function uploadInChunks(file, onProgress) {
     name: file.name,
     totalChunks
   });
+}
+
+function removeTempFile(filePath) {
+  try {
+    wx.getFileSystemManager().unlink({ filePath, fail: () => {} });
+  } catch (error) {}
 }
 
 function writeChunkFile(file, uploadId, index) {

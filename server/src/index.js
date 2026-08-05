@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { uploadRouter } from "./routes/uploads.js";
 import { taskRouter } from "./routes/tasks.js";
+import { logRouter } from "./routes/logs.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -17,6 +18,7 @@ app.use(express.json({ limit: "2mb" }));
 app.use("/files", express.static(path.join(dataDir, "outputs")));
 app.use("/api/uploads", uploadRouter(dataDir));
 app.use("/api/tasks", taskRouter(dataDir));
+app.use("/api/logs", logRouter());
 
 app.use((error, req, res, next) => {
   console.error(error);

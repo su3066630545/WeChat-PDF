@@ -9,6 +9,7 @@ const {
 const { validateFiles } = require("../../../utils/validator");
 const { runPdfTask } = require("../../../utils/pdf-core");
 const queue = require("../../../utils/task-queue");
+const monitor = require("../../../utils/monitor");
 
 const steps = [
   { key: "choose", name: "选择文件" },
@@ -78,7 +79,9 @@ function createToolPage(type, defaults = {}) {
         this.setData({ activeStep: "parse" });
         await validateFiles(files, config);
         this.setData({ files, activeStep: "process" });
+        monitor.track("files_selected", { type, count: files.length, totalSize: sumFileSize(files) });
       } catch (error) {
+        monitor.trackError(error, { type, action: "chooseFiles" });
         this.showError(error);
       }
     },
@@ -98,6 +101,27 @@ function createToolPage(type, defaults = {}) {
         this.rememberToolRoute();
         this.setData({ activeStep: "parse" });
         await validateFiles(files, config);
+        const fingerprint = queue.createFingerprint({ type, files, options });
+        const currentTasks = queue.getTasks();
+        const runningDuplicate = currentTasks.find((item) => item.fingerprint === fingerprint && ["pending", "running"].includes(item.status));
+        if (runningDuplicate) {
+          monitor.track("task_deduped", { type, status: runningDuplicate.status });
+          wx.showToast({ title: "相同任务处理中", icon: "none" });
+          return;
+        }
+
+        const duplicated = currentTasks.find((item) => item.fingerprint === fingerprint && item.status === "done" && item.result);
+        if (duplicated) {
+          this.setData({
+            result: duplicated.result,
+            progress: 100,
+            activeStep: "preview",
+            error: ""
+          });
+          wx.setStorageSync("latestPdfResult", duplicated.result);
+          monitor.track("task_deduped", { type, status: "done" });
+          return;
+        }
         this.setData({
           loading: true,
           showSkeleton: false,
@@ -109,7 +133,8 @@ function createToolPage(type, defaults = {}) {
         });
         this.startSkeletonTimer();
         wx.setStorageSync("pdfTaskRunning", true);
-        task = queue.addTask({ type, title: config.title, files });
+        task = queue.addTask({ type, title: config.title, files, options, fingerprint });
+        monitor.track("task_started", { type, fileCount: files.length, totalSize: sumFileSize(files) });
 
         const result = await runPdfTask(type, files, options, (progress) => {
           this.setData({ progress });
@@ -133,12 +158,15 @@ function createToolPage(type, defaults = {}) {
         queue.updateTask(task.id, { status: "done", progress: 100, result: nextResult });
         wx.setStorageSync("latestPdfResult", nextResult);
         wx.setStorageSync("pdfTaskRunning", false);
+        this.releaseInputFiles();
+        monitor.track("task_done", { type, progress: 100 });
         wx.showToast({ title: "处理完成", icon: "success" });
       } catch (error) {
         this.clearSkeletonTimer();
         this.setData({ loading: false, showSkeleton: false });
         wx.setStorageSync("pdfTaskRunning", false);
         if (task) queue.updateTask(task.id, { status: "failed", error: getErrorMessage(error) });
+        monitor.trackError(error, { type, action: "runTask" });
         this.showError(error);
       }
     },
@@ -156,6 +184,10 @@ function createToolPage(type, defaults = {}) {
       if (!this.skeletonTimer) return;
       clearTimeout(this.skeletonTimer);
       this.skeletonTimer = null;
+    },
+
+    releaseInputFiles() {
+      this.setData({ files: [] });
     },
 
     retryTask() {
@@ -250,6 +282,10 @@ function getResultName(result) {
   if (result.url) return result.url.split("/").pop();
   if (result.filePath) return result.filePath.split("/").pop();
   return "";
+}
+
+function sumFileSize(files) {
+  return files.reduce((total, file) => total + (file.size || 0), 0);
 }
 
 module.exports = {

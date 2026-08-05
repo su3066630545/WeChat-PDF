@@ -15,7 +15,7 @@ function chooseImages(count = 9) {
     wx.chooseMedia({
       count,
       mediaType: ["image"],
-      sourceType: ["album", "camera"],
+      sourceType: ["album"],
       success: (res) => resolve(normalizeFiles(res.tempFiles)),
       fail: reject
     });
