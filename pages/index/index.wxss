@@ -1,78 +1,64 @@
 .page {
   min-height: 100vh;
-  padding: 36rpx 28rpx 56rpx;
+  padding: 46rpx 28rpx 44rpx;
+  background: #f4f6f8;
 }
 
-.hero {
-  padding: 28rpx 0 18rpx;
+.top {
+  padding: 10rpx 0 34rpx;
 }
 
 .title {
   display: block;
-  font-size: 48rpx;
+  color: #111827;
+  font-size: 52rpx;
   font-weight: 800;
-  line-height: 1.25;
+  line-height: 1.2;
 }
 
 .subtitle {
   display: block;
   margin-top: 14rpx;
-  color: #69717d;
+  color: #5f6875;
   font-size: 28rpx;
-  line-height: 1.55;
-}
-
-.section {
-  margin-top: 34rpx;
-}
-
-.section-title {
-  display: block;
-  margin-bottom: 18rpx;
-  font-size: 30rpx;
-  font-weight: 700;
+  line-height: 1.5;
 }
 
 .grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(3, 1fr);
   gap: 18rpx;
 }
 
-.tool {
-  min-height: 156rpx;
-  padding: 24rpx;
-  border: 1rpx solid #e3e6eb;
+.tool-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 172rpx;
+  padding: 18rpx 12rpx;
+  border: 1rpx solid #e1e6ee;
   border-radius: 8rpx;
   background: #ffffff;
+  box-shadow: 0 8rpx 22rpx rgba(17, 24, 39, 0.05);
+}
+
+.tool-card:active {
+  background: #eef2f7;
 }
 
 .tool-name {
-  display: block;
-  font-size: 30rpx;
+  color: #1f2937;
+  font-size: 27rpx;
   font-weight: 700;
+  line-height: 1.32;
+  text-align: center;
 }
 
-.tool-desc {
+.footer {
   display: block;
-  margin-top: 14rpx;
-  color: #69717d;
+  margin-top: 42rpx;
+  color: #7a8491;
   font-size: 24rpx;
-  line-height: 1.45;
-}
-
-.latest,
-.queue {
-  margin-top: 40rpx;
-  border-radius: 8rpx;
-}
-
-.latest {
-  background: #2b5aed;
-  color: #ffffff;
-}
-
-.queue {
-  background: #1f2329;
-  color: #ffffff;
+  line-height: 1.4;
+  text-align: center;
 }
