@@ -68,7 +68,10 @@ function createToolPage(type, defaults = {}) {
 
         this.setData({ result: nextResult, savedPath: "", loading: false, progress: 100 });
         queue.updateTask(task.id, { status: "done", progress: 100, result: nextResult });
-        wx.showToast({ title: "处理完成", icon: "success" });
+        wx.setStorageSync("latestPdfResult", nextResult);
+        wx.navigateTo({
+          url: "/pages/result/result"
+        });
       } catch (error) {
         this.setData({ loading: false });
         if (task) queue.updateTask(task.id, { status: "failed", error: getErrorMessage(error) });

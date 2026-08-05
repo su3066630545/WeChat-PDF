@@ -1,0 +1,74 @@
+.page {
+  min-height: 100vh;
+  padding: 36rpx 28rpx 56rpx;
+  background: #f6f7f9;
+}
+
+.header {
+  padding-bottom: 24rpx;
+}
+
+.title {
+  display: block;
+  font-size: 42rpx;
+  font-weight: 800;
+}
+
+.subtitle {
+  display: block;
+  margin-top: 12rpx;
+  color: #69717d;
+  font-size: 26rpx;
+  line-height: 1.55;
+}
+
+.result {
+  padding: 24rpx;
+  border-radius: 8rpx;
+  background: #ffffff;
+}
+
+.result-title,
+.result-message,
+.result-path,
+.error {
+  display: block;
+}
+
+.result-title {
+  font-size: 30rpx;
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.result-message,
+.result-path {
+  margin-top: 12rpx;
+  color: #69717d;
+  font-size: 26rpx;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.primary,
+.secondary {
+  margin-top: 18rpx;
+  border-radius: 8rpx;
+}
+
+.primary {
+  background: #07c160;
+  color: #ffffff;
+}
+
+.secondary {
+  background: #ffffff;
+  color: #1f2329;
+  border: 1rpx solid #d8dde6;
+}
+
+.error {
+  margin-top: 22rpx;
+  color: #d93026;
+  font-size: 26rpx;
+}

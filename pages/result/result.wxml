@@ -1,0 +1,24 @@
+<view class="page">
+  <view class="header">
+    <text class="title">处理完成</text>
+    <text class="subtitle">结果文件已生成，可以打开查看、保存到本地，或复制下载链接。</text>
+  </view>
+
+  <view class="result" wx:if="{{result}}">
+    <text class="result-title">{{result.name || 'PDF 结果文件'}}</text>
+    <text class="result-message">{{result.message}}</text>
+    <text class="result-path" wx:if="{{savedPath}}">已保存：{{savedPath}}</text>
+    <text class="result-path" wx:else>当前为临时文件，建议点击“保存到本地”。</text>
+
+    <button class="primary" bindtap="openResult">打开文件</button>
+    <button class="secondary" bindtap="saveResult">保存到本地</button>
+    <button class="secondary" bindtap="copyResultUrl">复制下载链接</button>
+  </view>
+
+  <view class="result" wx:else>
+    <text class="result-title">暂无结果</text>
+    <text class="result-message">请先返回工具页处理文件。</text>
+  </view>
+
+  <text class="error" wx:if="{{error}}">{{error}}</text>
+</view>

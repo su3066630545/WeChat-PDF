@@ -15,7 +15,14 @@ const extraTools = [
 Page({
   data: {
     primaryTools,
-    extraTools
+    extraTools,
+    hasLatestResult: false
+  },
+
+  onShow() {
+    this.setData({
+      hasLatestResult: Boolean(wx.getStorageSync("latestPdfResult"))
+    });
   },
 
   openTool(event) {
@@ -27,6 +34,12 @@ Page({
   openTasks() {
     wx.navigateTo({
       url: "/pages/tasks/tasks"
+    });
+  },
+
+  openLatestResult() {
+    wx.navigateTo({
+      url: "/pages/result/result"
     });
   }
 });

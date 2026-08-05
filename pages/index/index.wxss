@@ -61,9 +61,18 @@
   line-height: 1.45;
 }
 
+.latest,
 .queue {
   margin-top: 40rpx;
   border-radius: 8rpx;
+}
+
+.latest {
+  background: #2b5aed;
+  color: #ffffff;
+}
+
+.queue {
   background: #1f2329;
   color: #ffffff;
 }
