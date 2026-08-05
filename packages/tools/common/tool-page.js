@@ -30,6 +30,7 @@ function createToolPage(type, defaults = {}) {
       steps,
       activeStep: "choose",
       loading: false,
+      showSkeleton: false,
       progress: 0,
       result: null,
       error: "",
@@ -44,6 +45,10 @@ function createToolPage(type, defaults = {}) {
     onShow() {
       this.rememberToolRoute();
       this.restoreLatestResult();
+    },
+
+    onUnload() {
+      this.clearSkeletonTimer();
     },
 
     rememberToolRoute() {
@@ -95,12 +100,14 @@ function createToolPage(type, defaults = {}) {
         await validateFiles(files, config);
         this.setData({
           loading: true,
+          showSkeleton: false,
           activeStep: "process",
           progress: 0,
           error: "",
           result: null,
           lastTaskInput: { files, options }
         });
+        this.startSkeletonTimer();
         wx.setStorageSync("pdfTaskRunning", true);
         task = queue.addTask({ type, title: config.title, files });
 
@@ -118,19 +125,37 @@ function createToolPage(type, defaults = {}) {
         this.setData({
           result: nextResult,
           loading: false,
+          showSkeleton: false,
           progress: 100,
           activeStep: "preview"
         });
+        this.clearSkeletonTimer();
         queue.updateTask(task.id, { status: "done", progress: 100, result: nextResult });
         wx.setStorageSync("latestPdfResult", nextResult);
         wx.setStorageSync("pdfTaskRunning", false);
         wx.showToast({ title: "处理完成", icon: "success" });
       } catch (error) {
-        this.setData({ loading: false });
+        this.clearSkeletonTimer();
+        this.setData({ loading: false, showSkeleton: false });
         wx.setStorageSync("pdfTaskRunning", false);
         if (task) queue.updateTask(task.id, { status: "failed", error: getErrorMessage(error) });
         this.showError(error);
       }
+    },
+
+    startSkeletonTimer() {
+      this.clearSkeletonTimer();
+      this.skeletonTimer = setTimeout(() => {
+        if (this.data.loading && !this.data.result) {
+          this.setData({ showSkeleton: true });
+        }
+      }, 650);
+    },
+
+    clearSkeletonTimer() {
+      if (!this.skeletonTimer) return;
+      clearTimeout(this.skeletonTimer);
+      this.skeletonTimer = null;
     },
 
     retryTask() {

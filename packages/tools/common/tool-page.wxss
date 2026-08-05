@@ -125,6 +125,76 @@
   margin-top: 24rpx;
 }
 
+.skeleton {
+  margin-top: 24rpx;
+  padding: 24rpx;
+  border: 1rpx solid #e3e6eb;
+  border-radius: 8rpx;
+  background: #ffffff;
+}
+
+.skeleton-line,
+.skeleton-thumb {
+  position: relative;
+  overflow: hidden;
+  border-radius: 8rpx;
+  background: #edf0f4;
+}
+
+.skeleton-line::after,
+.skeleton-thumb::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: -45%;
+  width: 45%;
+  background: linear-gradient(90deg, rgba(237, 240, 244, 0), rgba(255, 255, 255, 0.82), rgba(237, 240, 244, 0));
+  animation: skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+.skeleton-line {
+  height: 24rpx;
+  margin-top: 16rpx;
+}
+
+.skeleton-title {
+  width: 44%;
+  height: 32rpx;
+  margin-top: 0;
+}
+
+.skeleton-short {
+  width: 62%;
+}
+
+.skeleton-card {
+  display: flex;
+  gap: 18rpx;
+  margin-top: 24rpx;
+}
+
+.skeleton-thumb {
+  flex: 0 0 88rpx;
+  width: 88rpx;
+  height: 108rpx;
+}
+
+.skeleton-copy {
+  flex: 1;
+  padding-top: 2rpx;
+}
+
+@keyframes skeleton-shimmer {
+  0% {
+    transform: translateX(0);
+  }
+
+  100% {
+    transform: translateX(320%);
+  }
+}
+
 .bar {
   height: 14rpx;
   overflow: hidden;

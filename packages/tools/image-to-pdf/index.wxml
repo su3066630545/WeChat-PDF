@@ -28,6 +28,19 @@
 
   <button class="run" loading="{{loading}}" disabled="{{loading || !files.length}}" bindtap="runTask">开始处理</button>
 
+  <view class="skeleton" wx:if="{{showSkeleton && loading}}">
+    <view class="skeleton-line skeleton-title"></view>
+    <view class="skeleton-line"></view>
+    <view class="skeleton-line skeleton-short"></view>
+    <view class="skeleton-card">
+      <view class="skeleton-thumb"></view>
+      <view class="skeleton-copy">
+        <view class="skeleton-line"></view>
+        <view class="skeleton-line skeleton-short"></view>
+      </view>
+    </view>
+  </view>
+
   <view class="progress" wx:if="{{loading || progress}}">
     <view class="bar">
       <view class="bar-inner" style="width: {{progress}}%;"></view>
