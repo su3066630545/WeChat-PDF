@@ -90,6 +90,7 @@ async function runRemoteTool(type, uploadedFiles, options) {
     files: uploadedFiles,
     options
   });
+
   if (response.result && response.result.url) {
     const filePath = await downloadResult(response.result.url);
     const files = response.result.files
@@ -110,6 +111,7 @@ async function runRemoteTool(type, uploadedFiles, options) {
       }
     };
   }
+
   return response;
 }
 

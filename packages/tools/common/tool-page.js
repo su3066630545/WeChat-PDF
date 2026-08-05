@@ -1,5 +1,12 @@
 const { TOOL_CONFIG } = require("../../../utils/constants");
-const { choosePdfFiles, chooseImages, openDocument, saveImageToAlbum } = require("../../../utils/file");
+const {
+  choosePdfFiles,
+  chooseImages,
+  openDocument,
+  saveFile,
+  saveImageToAlbum,
+  copyText
+} = require("../../../utils/file");
 const { validateFiles } = require("../../../utils/validator");
 const { runPdfTask } = require("../../../utils/pdf-core");
 const queue = require("../../../utils/task-queue");
@@ -16,6 +23,7 @@ function createToolPage(type, defaults = {}) {
       loading: false,
       progress: 0,
       result: null,
+      savedPath: "",
       error: ""
     },
 
@@ -26,7 +34,7 @@ function createToolPage(type, defaults = {}) {
           : await choosePdfFiles(config.maxFiles);
 
         await validateFiles(files, config);
-        this.setData({ files, error: "", result: null });
+        this.setData({ files, error: "", result: null, savedPath: "", progress: 0 });
       } catch (error) {
         this.showError(error);
       }
@@ -45,7 +53,7 @@ function createToolPage(type, defaults = {}) {
 
       try {
         await validateFiles(files, config);
-        this.setData({ loading: true, progress: 0, error: "", result: null });
+        this.setData({ loading: true, progress: 0, error: "", result: null, savedPath: "" });
         task = queue.addTask({ type, title: config.title, files });
 
         const result = await runPdfTask(type, files, options, (progress) => {
@@ -53,19 +61,39 @@ function createToolPage(type, defaults = {}) {
           queue.updateTask(task.id, { progress, status: "running" });
         });
 
-        this.setData({ result, loading: false, progress: 100 });
-        queue.updateTask(task.id, { status: "done", progress: 100, result });
+        const nextResult = {
+          ...result,
+          name: getResultName(result)
+        };
+
+        this.setData({ result: nextResult, savedPath: "", loading: false, progress: 100 });
+        queue.updateTask(task.id, { status: "done", progress: 100, result: nextResult });
+        wx.showToast({ title: "处理完成", icon: "success" });
       } catch (error) {
         this.setData({ loading: false });
-        if (task) queue.updateTask(task.id, { status: "failed", error: error.message });
+        if (task) queue.updateTask(task.id, { status: "failed", error: getErrorMessage(error) });
         this.showError(error);
       }
     },
 
-    async exportResult() {
+    async openResult() {
       const { result } = this.data;
       if (!result || !result.filePath) {
-        wx.showToast({ title: "暂无可导出文件", icon: "none" });
+        wx.showToast({ title: "暂无结果文件", icon: "none" });
+        return;
+      }
+
+      try {
+        await openDocument(result.filePath);
+      } catch (error) {
+        this.showError(error);
+      }
+    },
+
+    async saveResult() {
+      const { result } = this.data;
+      if (!result || !result.filePath) {
+        wx.showToast({ title: "暂无结果文件", icon: "none" });
         return;
       }
 
@@ -79,18 +107,56 @@ function createToolPage(type, defaults = {}) {
           return;
         }
 
-        await openDocument(result.filePath);
+        if (this.data.savedPath) {
+          wx.showToast({ title: "已保存到本地", icon: "success" });
+          return;
+        }
+
+        const saved = await saveFile(result.filePath);
+        this.setData({ savedPath: saved.savedFilePath, "result.filePath": saved.savedFilePath });
+        wx.showToast({ title: "已保存到本地", icon: "success" });
       } catch (error) {
         this.showError(error);
       }
     },
 
+    async copyResultUrl() {
+      const { result } = this.data;
+      if (!result || !result.url) {
+        wx.showToast({ title: "暂无下载链接", icon: "none" });
+        return;
+      }
+
+      try {
+        const baseUrl = getApp().globalData.apiBaseUrl;
+        await copyText(`${baseUrl}${result.url}`);
+      } catch (error) {
+        this.showError(error);
+      }
+    },
+
+    exportResult() {
+      this.openResult();
+    },
+
     showError(error) {
-      const message = error && error.message ? error.message : "操作失败";
+      const message = getErrorMessage(error);
       this.setData({ error: message });
       wx.showToast({ title: message, icon: "none" });
     }
   });
+}
+
+function getErrorMessage(error) {
+  return (error && error.message) || (error && error.errMsg) || "操作失败";
+}
+
+function getResultName(result) {
+  if (!result) return "";
+  if (result.name) return result.name;
+  if (result.url) return result.url.split("/").pop();
+  if (result.filePath) return result.filePath.split("/").pop();
+  return "";
 }
 
 module.exports = {

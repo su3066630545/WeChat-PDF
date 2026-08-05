@@ -61,10 +61,21 @@ function saveImageToAlbum(filePath) {
   });
 }
 
+function copyText(text) {
+  return new Promise((resolve, reject) => {
+    wx.setClipboardData({
+      data: text,
+      success: resolve,
+      fail: reject
+    });
+  });
+}
+
 module.exports = {
   choosePdfFiles,
   chooseImages,
   saveFile,
   openDocument,
-  saveImageToAlbum
+  saveImageToAlbum,
+  copyText
 };

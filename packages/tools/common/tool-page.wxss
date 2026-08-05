@@ -23,7 +23,8 @@
 
 .pick,
 .run,
-.export {
+.export,
+.secondary {
   border-radius: 8rpx;
 }
 
@@ -112,10 +113,31 @@
   line-height: 1.5;
 }
 
-.export {
+.result-path {
+  display: block;
+  margin-top: 14rpx;
+  color: #1f2329;
+  font-size: 24rpx;
+  line-height: 1.5;
+  word-break: break-all;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 14rpx;
   margin-top: 20rpx;
+}
+
+.export {
   background: #1f2329;
   color: #ffffff;
+}
+
+.secondary {
+  background: #ffffff;
+  color: #1f2329;
+  border: 1rpx solid #d8dde6;
 }
 
 .error {
