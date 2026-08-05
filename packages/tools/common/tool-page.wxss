@@ -2,6 +2,7 @@
   min-height: 100vh;
   padding: 32rpx 28rpx 56rpx;
   background: #f4f6f8;
+  box-sizing: border-box;
 }
 
 .header {
@@ -10,6 +11,7 @@
 
 .title {
   display: block;
+  color: #111827;
   font-size: 42rpx;
   font-weight: 800;
   line-height: 1.25;
@@ -64,9 +66,13 @@
 }
 
 .files,
+.options {
+  margin-top: 24rpx;
+}
+
+.file,
 .option,
 .result {
-  margin-top: 22rpx;
   padding: 22rpx;
   border: 1rpx solid #e3e6eb;
   border-radius: 8rpx;
@@ -75,14 +81,6 @@
 
 .file {
   margin-bottom: 14rpx;
-  padding-bottom: 14rpx;
-  border-bottom: 1rpx solid #edf0f4;
-}
-
-.file:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: 0;
 }
 
 .file-name,
@@ -108,6 +106,10 @@
   font-size: 24rpx;
 }
 
+.option {
+  margin-bottom: 16rpx;
+}
+
 .option text {
   margin-bottom: 10rpx;
   font-size: 26rpx;
@@ -119,6 +121,7 @@
   padding: 0 18rpx;
   border: 1rpx solid #e3e6eb;
   border-radius: 8rpx;
+  box-sizing: border-box;
 }
 
 .progress {
@@ -213,6 +216,10 @@
   font-size: 24rpx;
 }
 
+.result {
+  margin-top: 28rpx;
+}
+
 .result-title {
   font-size: 30rpx;
   font-weight: 700;
@@ -240,13 +247,14 @@
 }
 
 .secondary {
+  border: 1rpx solid #d8dde6;
   background: #ffffff;
   color: #1f2329;
-  border: 1rpx solid #d8dde6;
 }
 
 .error {
   margin-top: 22rpx;
   color: #d93026;
   font-size: 26rpx;
+  line-height: 1.5;
 }

@@ -1,12 +1,1 @@
-<view class="page">
-  <view class="header"><text class="title">{{title}}</text><text class="subtitle">将 PDF 页面转换为图片。</text></view>
-  <view class="pipeline"><block wx:for="{{steps}}" wx:key="key"><text class="step {{activeStep === item.key ? 'step-active' : ''}}">{{item.name}}</text></block></view>
-  <button class="pick" bindtap="chooseFiles">选择文件</button>
-  <view class="files" wx:if="{{files.length}}"><block wx:for="{{files}}" wx:key="path"><view class="file"><text class="file-name">{{item.name}}</text><text class="file-size">{{item.size}} bytes</text></view></block></view>
-  <view class="option"><text>DPI</text><input value="{{options.dpi}}" data-key="dpi" bindinput="updateOption" /></view>
-  <button class="run" loading="{{loading}}" disabled="{{loading || !files.length}}" bindtap="runTask">开始处理</button>
-  <view class="skeleton" wx:if="{{showSkeleton && loading}}"><view class="skeleton-line skeleton-title"></view><view class="skeleton-line"></view><view class="skeleton-line skeleton-short"></view><view class="skeleton-card"><view class="skeleton-thumb"></view><view class="skeleton-copy"><view class="skeleton-line"></view><view class="skeleton-line skeleton-short"></view></view></view></view>
-  <view class="progress" wx:if="{{loading || progress}}"><view class="bar"><view class="bar-inner" style="width: {{progress}}%;"></view></view><text class="progress-text">{{progress}}%</text></view>
-  <view class="result" wx:if="{{result}}"><text class="result-title">处理完成</text><text class="result-message">{{result.message}}</text><text class="result-path" wx:if="{{result.name}}">文件名：{{result.name}}</text><view class="actions"><button class="export" bindtap="openResult">打开文件</button><button class="secondary" bindtap="saveResult">保存到相册</button><button class="secondary" bindtap="copyResultUrl">复制下载链接</button></view></view>
-  <text class="error" wx:if="{{error}}">{{error}}</text>
-</view>
+<include src="../common/tool-page.wxml" />

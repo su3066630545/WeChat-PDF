@@ -1,4 +1,5 @@
 const PDF_SIGNATURE = "%PDF";
+const IMAGE_EXTENSIONS = ["jpg", "jpeg", "png", "webp"];
 
 function getExtension(name = "") {
   const index = name.lastIndexOf(".");
@@ -7,11 +8,17 @@ function getExtension(name = "") {
 
 function isImage(file) {
   const ext = getExtension(file.name || file.path);
-  return ["jpg", "jpeg", "png", "webp"].includes(ext);
+  return IMAGE_EXTENSIONS.includes(ext);
 }
 
 function isPdf(file) {
   return getExtension(file.name || file.path) === "pdf";
+}
+
+function isAccepted(file, accept = []) {
+  if (accept.includes("image")) return isImage(file);
+  const ext = getExtension(file.name || file.path);
+  return accept.includes(ext);
 }
 
 function readHeader(filePath, length = 4) {
@@ -29,7 +36,7 @@ function readHeader(filePath, length = 4) {
 }
 
 async function validateFiles(files, config) {
-  if (files.length < config.minFiles) {
+  if (!files || files.length < config.minFiles) {
     throw new Error(`至少选择 ${config.minFiles} 个文件`);
   }
 
@@ -38,8 +45,7 @@ async function validateFiles(files, config) {
   }
 
   for (const file of files) {
-    const validType = config.accept.includes("pdf") ? isPdf(file) : isImage(file);
-    if (!validType) {
+    if (!isAccepted(file, config.accept)) {
       throw new Error(`文件格式不支持：${file.name || file.path}`);
     }
 
@@ -57,5 +63,7 @@ async function validateFiles(files, config) {
 module.exports = {
   validateFiles,
   isPdf,
-  isImage
+  isImage,
+  isAccepted,
+  getExtension
 };

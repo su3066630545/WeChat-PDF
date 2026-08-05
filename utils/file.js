@@ -1,13 +1,17 @@
-function choosePdfFiles(count = 1) {
+function chooseFilesByExtension(extensions, count = 1) {
   return new Promise((resolve, reject) => {
     wx.chooseMessageFile({
       count,
       type: "file",
-      extension: ["pdf"],
+      extension: extensions,
       success: (res) => resolve(normalizeFiles(res.tempFiles)),
       fail: reject
     });
   });
+}
+
+function choosePdfFiles(count = 1) {
+  return chooseFilesByExtension(["pdf"], count);
 }
 
 function chooseImages(count = 9) {
@@ -24,7 +28,7 @@ function chooseImages(count = 9) {
 
 function normalizeFiles(files) {
   return files.map((file) => ({
-    name: file.name || file.tempFilePath.split("/").pop(),
+    name: file.name || (file.tempFilePath || file.path || "").split("/").pop(),
     path: file.path || file.tempFilePath,
     size: file.size || 0
   }));
@@ -40,10 +44,11 @@ function saveFile(tempFilePath) {
   });
 }
 
-function openDocument(filePath) {
+function openDocument(filePath, fileType) {
   return new Promise((resolve, reject) => {
     wx.openDocument({
       filePath,
+      fileType,
       showMenu: true,
       success: resolve,
       fail: reject
@@ -72,6 +77,7 @@ function copyText(text) {
 }
 
 module.exports = {
+  chooseFilesByExtension,
   choosePdfFiles,
   chooseImages,
   saveFile,

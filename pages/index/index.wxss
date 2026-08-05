@@ -2,17 +2,19 @@
   display: flex;
   flex-direction: column;
   height: 100vh;
-  padding: 36rpx 28rpx 56rpx;
+  padding: 36rpx 28rpx 28rpx;
   overflow: hidden;
+  background: #f4f6f8;
   box-sizing: border-box;
 }
 
 .hero {
-  padding: 28rpx 0 18rpx;
+  padding: 24rpx 0 18rpx;
 }
 
 .title {
   display: block;
+  color: #111827;
   font-size: 48rpx;
   font-weight: 800;
   line-height: 1.25;
@@ -26,52 +28,9 @@
   line-height: 1.55;
 }
 
-.section {
-  margin-top: 34rpx;
-}
-
-.section-first {
-  margin-top: 0;
-}
-
-.section-title {
-  display: block;
-  margin-bottom: 18rpx;
-  font-size: 30rpx;
-  font-weight: 700;
-}
-
-.grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18rpx;
-}
-
-.tool {
-  min-height: 156rpx;
-  padding: 24rpx;
-  border: 1rpx solid #e3e6eb;
-  border-radius: 8rpx;
-  background: #ffffff;
-}
-
-.tool-name {
-  display: block;
-  font-size: 30rpx;
-  font-weight: 700;
-}
-
-.tool-desc {
-  display: block;
-  margin-top: 14rpx;
-  color: #69717d;
-  font-size: 24rpx;
-  line-height: 1.45;
-}
-
 .latest,
 .queue {
-  margin-top: 40rpx;
+  margin-top: 34rpx;
   border-radius: 8rpx;
 }
 
@@ -88,11 +47,67 @@
 .feature-swiper {
   flex: 1;
   min-height: 0;
-  margin-top: 34rpx;
+  margin-top: 28rpx;
 }
 
 .feature-page {
   height: 100%;
-  box-sizing: border-box;
   padding-bottom: 72rpx;
+  box-sizing: border-box;
+}
+
+.section {
+  margin-top: 28rpx;
+}
+
+.section-first {
+  margin-top: 0;
+}
+
+.section-title {
+  display: block;
+  margin-bottom: 18rpx;
+  color: #111827;
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18rpx;
+}
+
+.tool {
+  min-height: 156rpx;
+  padding: 24rpx;
+  border: 1rpx solid #e3e6eb;
+  border-radius: 8rpx;
+  background: #ffffff;
+  box-sizing: border-box;
+}
+
+.tool-name {
+  display: block;
+  color: #111827;
+  font-size: 30rpx;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.tool-desc {
+  display: block;
+  margin-top: 14rpx;
+  color: #69717d;
+  font-size: 24rpx;
+  line-height: 1.45;
+}
+
+.footer {
+  display: block;
+  margin-top: 16rpx;
+  color: #8a919f;
+  font-size: 24rpx;
+  line-height: 1.4;
+  text-align: center;
 }

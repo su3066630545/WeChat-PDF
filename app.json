@@ -16,7 +16,20 @@
         "image-to-pdf/index",
         "watermark/index",
         "rotate/index",
-        "delete-pages/index"
+        "delete-pages/index",
+        "word-to-pdf/index",
+        "excel-to-pdf/index",
+        "ppt-to-pdf/index",
+        "txt-to-pdf/index",
+        "cad-to-pdf/index",
+        "web-to-pdf/index",
+        "pdf-to-word/index",
+        "pdf-to-excel/index",
+        "pdf-to-ppt/index",
+        "pdf-to-text/index",
+        "pdf-to-html/index",
+        "pdf-to-epub/index",
+        "extract-images/index"
       ]
     }
   ],
@@ -26,7 +39,7 @@
     }
   },
   "window": {
-    "navigationBarTitleText": "PDF 工具箱",
+    "navigationBarTitleText": "PDF 全能工具",
     "navigationBarBackgroundColor": "#111827",
     "navigationBarTextStyle": "white",
     "backgroundColor": "#f4f6f8",

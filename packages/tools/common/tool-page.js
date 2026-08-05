@@ -1,12 +1,12 @@
 const { TOOL_CONFIG } = require("../../../utils/constants");
 const {
-  choosePdfFiles,
+  chooseFilesByExtension,
   chooseImages,
   openDocument,
   saveImageToAlbum,
   copyText
 } = require("../../../utils/file");
-const { validateFiles } = require("../../../utils/validator");
+const { validateFiles, getExtension } = require("../../../utils/validator");
 const { runPdfTask } = require("../../../utils/pdf-core");
 const queue = require("../../../utils/task-queue");
 const monitor = require("../../../utils/monitor");
@@ -27,6 +27,8 @@ function createToolPage(type, defaults = {}) {
     data: {
       type,
       title: config.title,
+      subtitle: config.subtitle,
+      optionFields: buildOptionFields(config.optionFields || [], defaults),
       files: [],
       options: { ...defaults },
       steps,
@@ -72,10 +74,7 @@ function createToolPage(type, defaults = {}) {
     async chooseFiles() {
       try {
         this.setData({ activeStep: "choose", error: "", result: null, progress: 0 });
-        const files = config.accept.includes("image")
-          ? await chooseImages(config.maxFiles)
-          : await choosePdfFiles(config.maxFiles);
-
+        const files = await chooseByConfig(config);
         this.setData({ activeStep: "parse" });
         await validateFiles(files, config);
         this.setData({ files, activeStep: "process" });
@@ -88,8 +87,10 @@ function createToolPage(type, defaults = {}) {
 
     updateOption(event) {
       const key = event.currentTarget.dataset.key;
+      const index = event.currentTarget.dataset.index;
       this.setData({
-        [`options.${key}`]: event.detail.value
+        [`options.${key}`]: event.detail.value,
+        [`optionFields[${index}].value`]: event.detail.value
       });
     },
 
@@ -122,6 +123,7 @@ function createToolPage(type, defaults = {}) {
           monitor.track("task_deduped", { type, status: "done" });
           return;
         }
+
         this.setData({
           loading: true,
           showSkeleton: false,
@@ -208,7 +210,7 @@ function createToolPage(type, defaults = {}) {
 
       try {
         this.setData({ activeStep: "preview" });
-        await openDocument(result.filePath);
+        await openDocument(result.filePath, result.fileType || getExtension(result.fileName || result.filePath));
       } catch (error) {
         this.showError(error);
       }
@@ -232,7 +234,7 @@ function createToolPage(type, defaults = {}) {
           return;
         }
 
-        await openDocument(result.filePath);
+        await openDocument(result.filePath, result.fileType || getExtension(result.fileName || result.filePath));
         wx.showToast({ title: "请用右上角菜单保存", icon: "none" });
       } catch (error) {
         this.showError(error);
@@ -273,6 +275,20 @@ function createToolPage(type, defaults = {}) {
   });
 }
 
+function chooseByConfig(config) {
+  if (config.accept.includes("image")) {
+    return chooseImages(config.maxFiles);
+  }
+  return chooseFilesByExtension(config.accept, config.maxFiles);
+}
+
+function buildOptionFields(fields, defaults) {
+  return fields.map((field) => ({
+    ...field,
+    value: defaults[field.key] || ""
+  }));
+}
+
 function getErrorMessage(error) {
   return (error && error.message) || (error && error.errMsg) || "操作失败";
 }
@@ -280,6 +296,7 @@ function getErrorMessage(error) {
 function getResultName(result) {
   if (!result) return "";
   if (result.name) return result.name;
+  if (result.fileName) return result.fileName;
   if (result.url) return result.url.split("/").pop();
   if (result.filePath) return result.filePath.split("/").pop();
   return "";

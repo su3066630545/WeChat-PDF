@@ -120,16 +120,13 @@ async function runRemoteTool(type, uploadedFiles, options) {
       : undefined;
 
     return {
-      ...response,
-      result: {
-        ...response.result,
-        filePath,
-        files
-      }
+      ...response.result,
+      filePath,
+      files
     };
   }
 
-  return response;
+  return response.result || response;
 }
 
 function sendLog(log) {

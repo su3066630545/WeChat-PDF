@@ -16,14 +16,13 @@ async function runPdfTask(type, files, options, onProgress) {
   }
 
   onProgress(72);
-  const task = await runRemoteTool(type, uploadedFiles, options);
+  const result = await runRemoteTool(type, uploadedFiles, options);
   onProgress(100);
-  return task.result;
+  return result;
 }
 
 async function runLocalTask(type, files, options, onProgress) {
   onProgress(28);
-
   return null;
 }
 

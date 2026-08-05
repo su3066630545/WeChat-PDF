@@ -1,7 +1,7 @@
 <view class="page">
   <view class="hero">
-    <text class="title">PDF 工具箱</text>
-    <text class="subtitle">本地优先处理 PDF，复杂或大文件自动切换到后端兜底。</text>
+    <text class="title">PDF 全能工具</text>
+    <text class="subtitle">本地处理、不上传、保护隐私</text>
   </view>
 
   <button class="latest" wx:if="{{hasLatestResult}}" bindtap="openRecentResults">查看最近结果</button>
@@ -43,7 +43,7 @@
           <text class="section-title">各类文件转 PDF</text>
           <view class="grid">
             <block wx:for="{{fileToPdfTools}}" wx:key="key">
-              <view class="tool" bindtap="openConversionTool" data-path="{{item.path}}" data-name="{{item.name}}">
+              <view class="tool" bindtap="openTool" data-path="{{item.path}}">
                 <text class="tool-name">{{item.name}}</text>
                 <text class="tool-desc">{{item.desc}}</text>
               </view>
@@ -61,7 +61,7 @@
           <text class="section-title">PDF 导出为其他格式</text>
           <view class="grid">
             <block wx:for="{{pdfExportTools}}" wx:key="key">
-              <view class="tool" bindtap="openConversionTool" data-path="{{item.path}}" data-name="{{item.name}}">
+              <view class="tool" bindtap="openTool" data-path="{{item.path}}">
                 <text class="tool-name">{{item.name}}</text>
                 <text class="tool-desc">{{item.desc}}</text>
               </view>
@@ -73,4 +73,6 @@
       </scroll-view>
     </swiper-item>
   </swiper>
+
+  <text class="footer">极速本地处理・无服务器留存</text>
 </view>
