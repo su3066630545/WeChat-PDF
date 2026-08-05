@@ -1,0 +1,32 @@
+<view class="page">
+  <view class="hero">
+    <text class="title">PDF 工具箱</text>
+    <text class="subtitle">本地优先处理 PDF，遇到复杂或大文件时切换到后端兜底。</text>
+  </view>
+
+  <view class="section">
+    <text class="section-title">基础功能</text>
+    <view class="grid">
+      <block wx:for="{{primaryTools}}" wx:key="key">
+        <view class="tool" bindtap="openTool" data-path="{{item.path}}">
+          <text class="tool-name">{{item.name}}</text>
+          <text class="tool-desc">{{item.desc}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <view class="section">
+    <text class="section-title">拓展功能</text>
+    <view class="grid">
+      <block wx:for="{{extraTools}}" wx:key="key">
+        <view class="tool" bindtap="openTool" data-path="{{item.path}}">
+          <text class="tool-name">{{item.name}}</text>
+          <text class="tool-desc">{{item.desc}}</text>
+        </view>
+      </block>
+    </view>
+  </view>
+
+  <button class="queue" bindtap="openTasks">查看任务队列</button>
+</view>

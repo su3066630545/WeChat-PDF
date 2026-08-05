@@ -1,0 +1,125 @@
+.page {
+  min-height: 100vh;
+  padding: 36rpx 28rpx 56rpx;
+}
+
+.header {
+  padding-bottom: 24rpx;
+}
+
+.title {
+  display: block;
+  font-size: 42rpx;
+  font-weight: 800;
+}
+
+.subtitle {
+  display: block;
+  margin-top: 12rpx;
+  color: #69717d;
+  font-size: 26rpx;
+  line-height: 1.55;
+}
+
+.pick,
+.run,
+.export {
+  border-radius: 8rpx;
+}
+
+.pick {
+  background: #ffffff;
+  color: #1f2329;
+}
+
+.run {
+  margin-top: 28rpx;
+  background: #07c160;
+  color: #ffffff;
+}
+
+.files {
+  margin-top: 24rpx;
+}
+
+.file {
+  margin-bottom: 14rpx;
+  padding: 22rpx;
+  border: 1rpx solid #e3e6eb;
+  border-radius: 8rpx;
+  background: #ffffff;
+}
+
+.file-name,
+.file-size,
+.result-title,
+.result-message,
+.error,
+.progress-text {
+  display: block;
+}
+
+.file-name {
+  font-size: 28rpx;
+  font-weight: 700;
+  word-break: break-all;
+}
+
+.file-size {
+  margin-top: 8rpx;
+  color: #69717d;
+  font-size: 24rpx;
+}
+
+.progress {
+  margin-top: 24rpx;
+}
+
+.bar {
+  height: 14rpx;
+  overflow: hidden;
+  border-radius: 8rpx;
+  background: #e3e6eb;
+}
+
+.bar-inner {
+  height: 100%;
+  background: #2b5aed;
+}
+
+.progress-text {
+  margin-top: 10rpx;
+  color: #69717d;
+  font-size: 24rpx;
+}
+
+.result {
+  margin-top: 28rpx;
+  padding: 24rpx;
+  border-radius: 8rpx;
+  background: #ffffff;
+}
+
+.result-title {
+  font-size: 30rpx;
+  font-weight: 700;
+}
+
+.result-message {
+  margin-top: 10rpx;
+  color: #69717d;
+  font-size: 26rpx;
+  line-height: 1.5;
+}
+
+.export {
+  margin-top: 20rpx;
+  background: #1f2329;
+  color: #ffffff;
+}
+
+.error {
+  margin-top: 22rpx;
+  color: #d93026;
+  font-size: 26rpx;
+}

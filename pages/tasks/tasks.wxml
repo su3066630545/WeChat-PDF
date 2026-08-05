@@ -1,0 +1,12 @@
+<view class="page">
+  <text class="title">任务队列</text>
+  <view class="empty" wx:if="{{!tasks.length}}">暂无任务</view>
+  <block wx:for="{{tasks}}" wx:key="id">
+    <view class="task">
+      <text class="name">{{item.title}}</text>
+      <text class="status">{{item.status}} · {{item.progress}}%</text>
+      <view class="bar"><view class="bar-inner" style="width: {{item.progress}}%;"></view></view>
+      <text class="error" wx:if="{{item.error}}">{{item.error}}</text>
+    </view>
+  </block>
+</view>

@@ -21,4 +21,10 @@ npm run dev
 
 默认地址是 `http://127.0.0.1:3000`。小程序端的后端地址在 `app.js` 的 `globalData.apiBaseUrl` 中配置。
 
-后端已实现合并、拆分、水印、旋转、删页、图片转 PDF。PDF 转图片需要安装 Poppler 或 MuPDF 后接入渲染命令；高质量压缩建议生产环境安装 Ghostscript。
+后端已实现合并、拆分、水印、旋转、删页、图片转 PDF、PDF 转图片和 PDF 压缩。
+
+PDF 转图片依赖 Poppler 的 `pdftoppm`。PDF 压缩会优先使用 Ghostscript；如果未安装 Ghostscript，会使用 QPDF 做线性化和流压缩。可通过环境变量指定工具路径：
+
+- `PDF_TOOL_PDFTOPPM`
+- `PDF_TOOL_GS`
+- `PDF_TOOL_QPDF`
