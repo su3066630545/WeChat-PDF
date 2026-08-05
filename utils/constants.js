@@ -1,4 +1,5 @@
 const MAX_LOCAL_FILE_SIZE = 20 * 1024 * 1024;
+const LOCAL_SUPPORTED_TOOLS = [];
 const CHUNK_SIZE = 2 * 1024 * 1024;
 
 const TOOL_CONFIG = {
@@ -14,6 +15,7 @@ const TOOL_CONFIG = {
 
 module.exports = {
   MAX_LOCAL_FILE_SIZE,
+  LOCAL_SUPPORTED_TOOLS,
   CHUNK_SIZE,
   TOOL_CONFIG
 };

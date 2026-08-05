@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 import os from "node:os";
+import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { uploadRouter } from "./routes/uploads.js";
@@ -15,7 +16,13 @@ const dataDir = process.env.PDF_TOOL_DATA_DIR || path.join(os.tmpdir(), "wechat-
 
 app.use(cors());
 app.use(express.json({ limit: "2mb" }));
-app.use("/files", express.static(path.join(dataDir, "outputs")));
+app.get("/files/:name", async (req, res, next) => {
+  const filePath = path.join(dataDir, "outputs", path.basename(req.params.name));
+  res.download(filePath, (error) => {
+    fs.rm(filePath, { force: true }).catch(() => {});
+    if (error && !res.headersSent) next(error);
+  });
+});
 app.use("/api/uploads", uploadRouter(dataDir));
 app.use("/api/tasks", taskRouter(dataDir));
 app.use("/api/logs", logRouter());
