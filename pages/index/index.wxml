@@ -28,6 +28,30 @@
         </view>
       </block>
     </view>
+
+    <view class="convert-section">
+      <text class="convert-title">各类文件转 PDF</text>
+      <view class="convert-grid">
+        <block wx:for="{{fileToPdfTools}}" wx:key="key">
+          <view class="convert-tool" bindtap="openConversionTool" data-path="{{item.path}}" data-name="{{item.name}}">
+            <text class="convert-name">{{item.name}}</text>
+            <text class="convert-desc">{{item.desc}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+
+    <view class="convert-section">
+      <text class="convert-title">PDF 导出为其他格式</text>
+      <view class="convert-grid">
+        <block wx:for="{{pdfExportTools}}" wx:key="key">
+          <view class="convert-tool" bindtap="openConversionTool" data-path="{{item.path}}" data-name="{{item.name}}">
+            <text class="convert-name">{{item.name}}</text>
+            <text class="convert-desc">{{item.desc}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
   </view>
 
   <button class="queue" bindtap="openTasks">查看任务队列</button>
