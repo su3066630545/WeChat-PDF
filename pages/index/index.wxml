@@ -4,23 +4,7 @@
     <text class="subtitle">本地优先处理 PDF，复杂或大文件自动切换到后端兜底。</text>
   </view>
 
-  <view class="recent" wx:if="{{hasLatestResult}}">
-    <view class="recent-head">
-      <text class="section-title">查看最近结果</text>
-      <text class="recent-more" bindtap="openLatestResult">最近一项</text>
-    </view>
-    <view class="recent-card">
-      <block wx:for="{{recentResults}}" wx:key="name">
-        <view class="recent-item" bindtap="openRecentResult" data-index="{{index}}">
-          <text class="recent-badge {{item.badgeClass}}">{{item.badge}}</text>
-          <view class="recent-info">
-            <text class="recent-name">{{item.name}}</text>
-            <text class="recent-meta">{{item.meta}}</text>
-          </view>
-        </view>
-      </block>
-    </view>
-  </view>
+  <button class="latest" wx:if="{{hasLatestResult}}" bindtap="openRecentResults">查看最近结果</button>
 
   <view class="section">
     <text class="section-title">基础功能</text>

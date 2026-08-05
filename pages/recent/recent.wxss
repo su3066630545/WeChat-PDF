@@ -1,0 +1,114 @@
+.page {
+  min-height: 100vh;
+  padding: 32rpx 28rpx 56rpx;
+  background: #f4f6f8;
+}
+
+.header {
+  padding: 8rpx 0 24rpx;
+}
+
+.title,
+.subtitle,
+.empty,
+.name,
+.meta,
+.message {
+  display: block;
+}
+
+.title {
+  font-size: 42rpx;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.subtitle {
+  margin-top: 12rpx;
+  color: #69717d;
+  font-size: 26rpx;
+  line-height: 1.55;
+}
+
+.empty {
+  padding: 42rpx 24rpx;
+  border: 1rpx solid #e3e6eb;
+  border-radius: 8rpx;
+  background: #ffffff;
+  color: #69717d;
+  font-size: 26rpx;
+  text-align: center;
+}
+
+.list {
+  overflow: hidden;
+  border: 1rpx solid #e3e6eb;
+  border-radius: 8rpx;
+  background: #ffffff;
+}
+
+.item {
+  display: flex;
+  align-items: center;
+  min-height: 136rpx;
+  padding: 22rpx;
+  border-bottom: 1rpx solid #edf0f4;
+}
+
+.item:last-child {
+  border-bottom: 0;
+}
+
+.badge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 68rpx;
+  height: 82rpx;
+  border: 1rpx solid currentColor;
+  border-radius: 8rpx;
+  font-size: 20rpx;
+}
+
+.badge-pdf {
+  color: #d93026;
+  background: #fff5f4;
+}
+
+.badge-image {
+  color: #1a8f5a;
+  background: #f2fbf5;
+}
+
+.content {
+  flex: 1;
+  min-width: 0;
+  margin-left: 22rpx;
+}
+
+.name {
+  overflow: hidden;
+  font-size: 28rpx;
+  font-weight: 700;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.meta,
+.message {
+  overflow: hidden;
+  margin-top: 8rpx;
+  color: #69717d;
+  font-size: 23rpx;
+  line-height: 1.35;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.arrow {
+  margin-left: 16rpx;
+  color: #9aa3af;
+  font-size: 42rpx;
+  line-height: 1;
+}

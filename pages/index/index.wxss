@@ -61,101 +61,15 @@
   line-height: 1.45;
 }
 
+.latest,
 .queue {
   margin-top: 40rpx;
   border-radius: 8rpx;
 }
 
-.recent {
-  margin-top: 26rpx;
-}
-
-.recent-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18rpx;
-}
-
-.recent-head .section-title {
-  margin-bottom: 0;
-}
-
-.recent-more {
-  color: #69717d;
-  font-size: 24rpx;
-}
-
-.recent-card {
-  overflow: hidden;
-  border: 1rpx solid #e3e6eb;
-  border-radius: 8rpx;
-  background: #ffffff;
-}
-
-.recent-item {
-  display: flex;
-  align-items: center;
-  min-height: 118rpx;
-  padding: 18rpx 22rpx;
-  border-bottom: 1rpx solid #edf0f4;
-}
-
-.recent-item:last-child {
-  border-bottom: 0;
-}
-
-.recent-badge {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 64rpx;
-  height: 76rpx;
-  border: 1rpx solid currentColor;
-  border-radius: 8rpx;
-  background: #f7fbff;
-  font-size: 20rpx;
-  line-height: 1;
-}
-
-.recent-badge-pdf {
-  color: #d93026;
-  background: #fff5f4;
-}
-
-.recent-badge-image {
-  color: #1a8f5a;
-  background: #f2fbf5;
-}
-
-.recent-info {
-  flex: 1;
-  min-width: 0;
-  margin-left: 22rpx;
-}
-
-.recent-name,
-.recent-meta {
-  display: block;
-}
-
-.recent-name {
-  overflow: hidden;
-  font-size: 28rpx;
-  font-weight: 700;
-  line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.recent-meta {
-  overflow: hidden;
-  margin-top: 8rpx;
-  color: #69717d;
-  font-size: 23rpx;
-  line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.latest {
+  background: #2b5aed;
+  color: #ffffff;
 }
 
 .queue {

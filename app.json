@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/index",
+    "pages/recent/recent",
     "pages/tasks/tasks",
     "pages/result/result"
   ],

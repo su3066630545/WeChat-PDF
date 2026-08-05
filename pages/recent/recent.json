@@ -1,0 +1,6 @@
+{
+  "navigationBarTitleText": "最近结果",
+  "navigationBarBackgroundColor": "#111827",
+  "navigationBarTextStyle": "white",
+  "enablePullDownRefresh": false
+}
