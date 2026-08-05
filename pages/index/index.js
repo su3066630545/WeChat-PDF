@@ -14,16 +14,24 @@ const extraTools = [
   { key: "delete-pages", name: "页面删除", desc: "移除指定页面", path: "/packages/tools/delete-pages/index" }
 ];
 
+const toolRouteMap = primaryTools.concat(extraTools).reduce((map, tool) => {
+  map[tool.key] = tool.path;
+  return map;
+}, {});
+
 Page({
   data: {
     primaryTools,
     extraTools,
-    hasLatestResult: false
+    hasLatestResult: false,
+    recentResults: []
   },
 
   onShow() {
+    const recentResults = cache.getRecentResults().map(formatRecentResult);
     this.setData({
-      hasLatestResult: Boolean(cache.getLatestResult())
+      hasLatestResult: recentResults.length > 0,
+      recentResults
     });
   },
 
@@ -44,5 +52,44 @@ Page({
     wx.navigateTo({
       url: route || "/pages/result/result"
     });
+  },
+
+  openRecentResult(event) {
+    const index = Number(event.currentTarget.dataset.index);
+    const item = this.data.recentResults[index];
+    if (!item || !item.raw) return;
+
+    cache.setLatestResult(item.raw);
+    wx.navigateTo({
+      url: getResultRoute(item.raw)
+    });
   }
 });
+
+function getResultRoute(result) {
+  return result.route || toolRouteMap[result.type] || "/pages/result/result";
+}
+
+function formatRecentResult(result) {
+  return {
+    raw: result,
+    badge: result.kind === "image" ? "IMG" : "PDF",
+    badgeClass: result.kind === "image" ? "recent-badge-image" : "recent-badge-pdf",
+    name: result.name || "PDF 处理结果",
+    meta: formatResultMeta(result)
+  };
+}
+
+function formatResultMeta(result) {
+  const time = formatRelativeTime(result.cachedAt);
+  return result.message ? `${result.message} · ${time}` : time;
+}
+
+function formatRelativeTime(timestamp) {
+  if (!timestamp) return "刚刚";
+  const diff = Date.now() - timestamp;
+  if (diff < 60 * 1000) return "刚刚";
+  if (diff < 60 * 60 * 1000) return `${Math.floor(diff / (60 * 1000))} 分钟前`;
+  if (diff < 24 * 60 * 60 * 1000) return `${Math.floor(diff / (60 * 60 * 1000))} 小时前`;
+  return `${Math.floor(diff / (24 * 60 * 60 * 1000))} 天前`;
+}

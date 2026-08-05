@@ -144,7 +144,8 @@ function createToolPage(type, defaults = {}) {
         const nextResult = {
           ...result,
           type,
-          name: getResultName(result)
+          name: getResultName(result),
+          route: `/${this.route}`
         };
 
         this.setData({
