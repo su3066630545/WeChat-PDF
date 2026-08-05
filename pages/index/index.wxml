@@ -6,53 +6,67 @@
 
   <button class="latest" wx:if="{{hasLatestResult}}" bindtap="openRecentResults">查看最近结果</button>
 
-  <view class="section">
-    <text class="section-title">基础功能</text>
-    <view class="grid">
-      <block wx:for="{{primaryTools}}" wx:key="key">
-        <view class="tool" bindtap="openTool" data-path="{{item.path}}">
-          <text class="tool-name">{{item.name}}</text>
-          <text class="tool-desc">{{item.desc}}</text>
-        </view>
-      </block>
-    </view>
-  </view>
-
-  <view class="section">
-    <text class="section-title">拓展功能</text>
-    <view class="grid">
-      <block wx:for="{{extraTools}}" wx:key="key">
-        <view class="tool" bindtap="openTool" data-path="{{item.path}}">
-          <text class="tool-name">{{item.name}}</text>
-          <text class="tool-desc">{{item.desc}}</text>
-        </view>
-      </block>
-    </view>
-
-    <view class="convert-section">
-      <text class="convert-title">各类文件转 PDF</text>
-      <view class="convert-grid">
-        <block wx:for="{{fileToPdfTools}}" wx:key="key">
-          <view class="convert-tool" bindtap="openConversionTool" data-path="{{item.path}}" data-name="{{item.name}}">
-            <text class="convert-name">{{item.name}}</text>
-            <text class="convert-desc">{{item.desc}}</text>
+  <swiper class="feature-swiper" indicator-dots="{{true}}" indicator-color="#d5dbe4" indicator-active-color="#111827">
+    <swiper-item>
+      <scroll-view class="feature-page" scroll-y="{{true}}">
+        <view class="section section-first">
+          <text class="section-title">基础功能</text>
+          <view class="grid">
+            <block wx:for="{{primaryTools}}" wx:key="key">
+              <view class="tool" bindtap="openTool" data-path="{{item.path}}">
+                <text class="tool-name">{{item.name}}</text>
+                <text class="tool-desc">{{item.desc}}</text>
+              </view>
+            </block>
           </view>
-        </block>
-      </view>
-    </view>
+        </view>
 
-    <view class="convert-section">
-      <text class="convert-title">PDF 导出为其他格式</text>
-      <view class="convert-grid">
-        <block wx:for="{{pdfExportTools}}" wx:key="key">
-          <view class="convert-tool" bindtap="openConversionTool" data-path="{{item.path}}" data-name="{{item.name}}">
-            <text class="convert-name">{{item.name}}</text>
-            <text class="convert-desc">{{item.desc}}</text>
+        <view class="section">
+          <text class="section-title">拓展功能</text>
+          <view class="grid">
+            <block wx:for="{{extraTools}}" wx:key="key">
+              <view class="tool" bindtap="openTool" data-path="{{item.path}}">
+                <text class="tool-name">{{item.name}}</text>
+                <text class="tool-desc">{{item.desc}}</text>
+              </view>
+            </block>
           </view>
-        </block>
-      </view>
-    </view>
-  </view>
+        </view>
 
-  <button class="queue" bindtap="openTasks">查看任务队列</button>
+        <button class="queue" bindtap="openTasks">查看任务队列</button>
+      </scroll-view>
+    </swiper-item>
+
+    <swiper-item>
+      <scroll-view class="feature-page" scroll-y="{{true}}">
+        <view class="section section-first">
+          <text class="section-title">各类文件转 PDF</text>
+          <view class="grid">
+            <block wx:for="{{fileToPdfTools}}" wx:key="key">
+              <view class="tool" bindtap="openConversionTool" data-path="{{item.path}}" data-name="{{item.name}}">
+                <text class="tool-name">{{item.name}}</text>
+                <text class="tool-desc">{{item.desc}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+      </scroll-view>
+    </swiper-item>
+
+    <swiper-item>
+      <scroll-view class="feature-page" scroll-y="{{true}}">
+        <view class="section section-first">
+          <text class="section-title">PDF 导出为其他格式</text>
+          <view class="grid">
+            <block wx:for="{{pdfExportTools}}" wx:key="key">
+              <view class="tool" bindtap="openConversionTool" data-path="{{item.path}}" data-name="{{item.name}}">
+                <text class="tool-name">{{item.name}}</text>
+                <text class="tool-desc">{{item.desc}}</text>
+              </view>
+            </block>
+          </view>
+        </view>
+      </scroll-view>
+    </swiper-item>
+  </swiper>
 </view>

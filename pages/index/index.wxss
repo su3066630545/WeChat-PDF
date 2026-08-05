@@ -1,6 +1,10 @@
 .page {
-  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   padding: 36rpx 28rpx 56rpx;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 .hero {
@@ -24,6 +28,10 @@
 
 .section {
   margin-top: 34rpx;
+}
+
+.section-first {
+  margin-top: 0;
 }
 
 .section-title {
@@ -61,61 +69,6 @@
   line-height: 1.45;
 }
 
-.convert-section {
-  margin-top: 26rpx;
-}
-
-.convert-title {
-  display: block;
-  margin-bottom: 14rpx;
-  color: #374151;
-  font-size: 26rpx;
-  font-weight: 700;
-}
-
-.convert-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 14rpx;
-}
-
-.convert-tool {
-  min-height: 104rpx;
-  padding: 18rpx;
-  border: 1rpx solid #e3e6eb;
-  border-radius: 8rpx;
-  background: #ffffff;
-}
-
-.convert-tool:active {
-  background: #eef2f7;
-}
-
-.convert-name,
-.convert-desc {
-  display: block;
-}
-
-.convert-name {
-  overflow: hidden;
-  color: #1f2329;
-  font-size: 26rpx;
-  font-weight: 700;
-  line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.convert-desc {
-  overflow: hidden;
-  margin-top: 8rpx;
-  color: #69717d;
-  font-size: 22rpx;
-  line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
 .latest,
 .queue {
   margin-top: 40rpx;
@@ -130,4 +83,16 @@
 .queue {
   background: #1f2329;
   color: #ffffff;
+}
+
+.feature-swiper {
+  flex: 1;
+  min-height: 0;
+  margin-top: 34rpx;
+}
+
+.feature-page {
+  height: 100%;
+  box-sizing: border-box;
+  padding-bottom: 72rpx;
 }
