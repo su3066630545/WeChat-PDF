@@ -3,7 +3,6 @@ const {
   choosePdfFiles,
   chooseImages,
   openDocument,
-  saveFile,
   saveImageToAlbum,
   copyText
 } = require("../../../utils/file");
@@ -66,12 +65,10 @@ function createToolPage(type, defaults = {}) {
           name: getResultName(result)
         };
 
-        this.setData({ result: nextResult, savedPath: "", loading: false, progress: 100 });
+        this.setData({ result: nextResult, loading: false, progress: 100 });
         queue.updateTask(task.id, { status: "done", progress: 100, result: nextResult });
         wx.setStorageSync("latestPdfResult", nextResult);
-        wx.navigateTo({
-          url: "/pages/result/result"
-        });
+        wx.navigateTo({ url: "/pages/result/result" });
       } catch (error) {
         this.setData({ loading: false });
         if (task) queue.updateTask(task.id, { status: "failed", error: getErrorMessage(error) });
@@ -110,14 +107,8 @@ function createToolPage(type, defaults = {}) {
           return;
         }
 
-        if (this.data.savedPath) {
-          wx.showToast({ title: "已保存到本地", icon: "success" });
-          return;
-        }
-
-        const saved = await saveFile(result.filePath);
-        this.setData({ savedPath: saved.savedFilePath, "result.filePath": saved.savedFilePath });
-        wx.showToast({ title: "已保存到本地", icon: "success" });
+        await openDocument(result.filePath);
+        wx.showToast({ title: "请用右上角菜单保存", icon: "none" });
       } catch (error) {
         this.showError(error);
       }

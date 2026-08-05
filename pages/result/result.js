@@ -1,17 +1,14 @@
-const { openDocument, saveFile, saveImageToAlbum, copyText } = require("../../utils/file");
+const { openDocument, saveImageToAlbum, copyText } = require("../../utils/file");
 
 Page({
   data: {
     result: null,
-    savedPath: "",
     error: ""
   },
 
   onLoad() {
-    const result = wx.getStorageSync("latestPdfResult");
     this.setData({
-      result,
-      savedPath: result && result.savedPath ? result.savedPath : ""
+      result: wx.getStorageSync("latestPdfResult")
     });
   },
 
@@ -46,15 +43,8 @@ Page({
         return;
       }
 
-      const saved = await saveFile(result.filePath);
-      const nextResult = {
-        ...result,
-        filePath: saved.savedFilePath,
-        savedPath: saved.savedFilePath
-      };
-      wx.setStorageSync("latestPdfResult", nextResult);
-      this.setData({ result: nextResult, savedPath: saved.savedFilePath });
-      wx.showToast({ title: "已保存到本地", icon: "success" });
+      await openDocument(result.filePath);
+      wx.showToast({ title: "请用右上角菜单保存", icon: "none" });
     } catch (error) {
       this.showError(error);
     }
@@ -72,12 +62,6 @@ Page({
     } catch (error) {
       this.showError(error);
     }
-  },
-
-  goHome() {
-    wx.switchTab
-      ? wx.navigateBack({ delta: 99 })
-      : wx.navigateTo({ url: "/pages/index/index" });
   },
 
   showError(error) {
