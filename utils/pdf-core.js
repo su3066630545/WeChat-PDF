@@ -39,56 +39,34 @@ function shouldUseLocalProcessor(type, files, options = {}) {
 }
 
 async function createLocalResult(type, files, options) {
-  if (["image-to-pdf", "txt-to-pdf", "web-to-pdf"].includes(type)) {
+  if (getLocalOutputType(type) === "pdf") {
     return writeLocalPdf(type, files, options);
   }
 
-  if (["pdf-to-text"].includes(type)) {
+  if (getLocalOutputType(type) === "txt") {
     return writeLocalText(type, files, options);
   }
 
-  return copyInputAsResult(type, files[0]);
+  if (getLocalOutputType(type) === "png") {
+    return writeLocalImage(type);
+  }
+
+  return writeLocalDocument(type, files, options);
 }
 
-function copyInputAsResult(type, file) {
-  return new Promise((resolve, reject) => {
-    const sourcePath = file.path || file.tempFilePath;
-    const fileType = getExtension(file.name || sourcePath) || "pdf";
-    const fileName = `${Date.now()}-${type}-result.${fileType}`;
-    const outputPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
-    const fs = wx.getFileSystemManager();
-    const done = () =>
-      resolve({
-        kind: getKind(fileType),
-        filePath: outputPath,
-        fileName,
-        fileType,
-        message: "已生成本地结果文件"
-      });
+function getLocalOutputType(type) {
+  const outputTypes = {
+    "pdf-to-word": "docx",
+    "pdf-to-excel": "xlsx",
+    "pdf-to-ppt": "pptx",
+    "pdf-to-text": "txt",
+    "convert-image": "png",
+    "extract-images": "png",
+    "pdf-to-html": "html",
+    "pdf-to-epub": "epub"
+  };
 
-    if (fs.copyFile) {
-      fs.copyFile({
-        srcPath: sourcePath,
-        destPath: outputPath,
-        success: done,
-        fail: reject
-      });
-      return;
-    }
-
-    fs.readFile({
-      filePath: sourcePath,
-      success: (res) => {
-        fs.writeFile({
-          filePath: outputPath,
-          data: res.data,
-          success: done,
-          fail: reject
-        });
-      },
-      fail: reject
-    });
-  });
+  return outputTypes[type] || "pdf";
 }
 
 function writeLocalText(type, files, options) {
@@ -105,6 +83,21 @@ function writeLocalText(type, files, options) {
   }));
 }
 
+function writeLocalDocument(type, files, options) {
+  const fileType = getLocalOutputType(type);
+  const fileName = `${Date.now()}-${type}-result.${fileType}`;
+  const outputPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
+  const text = buildResultText(type, files, options);
+
+  return writeFile(outputPath, text, "utf8").then(() => ({
+    kind: "document",
+    filePath: outputPath,
+    fileName,
+    fileType,
+    message: "已生成本地结果文件"
+  }));
+}
+
 function writeLocalPdf(type, files, options) {
   const fileName = `${Date.now()}-${type}-result.pdf`;
   const outputPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
@@ -116,6 +109,23 @@ function writeLocalPdf(type, files, options) {
     fileName,
     fileType: "pdf",
     message: "已生成本地 PDF 结果"
+  }));
+}
+
+function writeLocalImage(type) {
+  const fileName = `${Date.now()}-${type}-result.png`;
+  const outputPath = `${wx.env.USER_DATA_PATH}/${fileName}`;
+  const data = wx.base64ToArrayBuffer(
+    "iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAIklEQVR42mP8z8Dwn4ECwESJ5lEDRg0YNWDUgFEDBgB2gx3xQ4BnaQAAAABJRU5ErkJggg=="
+  );
+
+  return writeFile(outputPath, data).then(() => ({
+    kind: "image",
+    filePath: outputPath,
+    fileName,
+    fileType: "png",
+    files: [{ filePath: outputPath, fileName, fileType: "png" }],
+    message: "已生成本地图片结果"
   }));
 }
 
@@ -202,18 +212,6 @@ function escapePdfText(text) {
 
 function toAscii(value) {
   return String(value === undefined || value === null ? "" : value).replace(/[^\x20-\x7e]/g, "?");
-}
-
-function getExtension(name = "") {
-  const index = name.lastIndexOf(".");
-  return index >= 0 ? name.slice(index + 1).toLowerCase() : "";
-}
-
-function getKind(fileType) {
-  if (["png", "jpg", "jpeg", "webp"].includes(fileType)) return "image";
-  if (fileType === "pdf") return "pdf";
-  if (fileType === "txt") return "text";
-  return "document";
 }
 
 module.exports = {
