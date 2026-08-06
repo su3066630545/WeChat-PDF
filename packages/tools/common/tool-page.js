@@ -76,6 +76,10 @@ function createToolPage(type, defaults = {}) {
       try {
         this.setData({ activeStep: "choose", error: "", result: null, progress: 0 });
         const files = await chooseByConfig(config);
+        if (!files.length) {
+          this.setData({ activeStep: "choose", error: "", loading: false, showSkeleton: false });
+          return;
+        }
         this.setData({ activeStep: "parse" });
         await validateFiles(files, config);
         this.setData({ files, activeStep: "process" });

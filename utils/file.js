@@ -5,7 +5,13 @@ function chooseFilesByExtension(extensions, count = 1) {
       type: "file",
       extension: extensions,
       success: (res) => resolve(normalizeFiles(res.tempFiles)),
-      fail: reject
+      fail: (error) => {
+        if (isUserCancel(error)) {
+          resolve([]);
+          return;
+        }
+        reject(error);
+      }
     });
   });
 }
@@ -26,13 +32,19 @@ function chooseImages(count = 9) {
       mediaType: ["image"],
       sourceType: ["album"],
       success: (res) => resolve(normalizeFiles(res.tempFiles)),
-      fail: reject
+      fail: (error) => {
+        if (isUserCancel(error)) {
+          resolve([]);
+          return;
+        }
+        reject(error);
+      }
     });
   });
 }
 
 function normalizeFiles(files) {
-  return files.map((file) => ({
+  return (files || []).map((file) => ({
     name: file.name || (file.tempFilePath || file.path || "").split("/").pop(),
     path: file.path || file.tempFilePath,
     size: file.size || 0
